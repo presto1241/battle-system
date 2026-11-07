@@ -29,8 +29,10 @@ fn main() {
     }
 
     // Wait for user to press enter to quit
-    println!("Enter a number between 1 and 4");
-    input_number(1, 4);
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line");
 }
 
 fn input_number(min:i32, max:i32) -> i32
