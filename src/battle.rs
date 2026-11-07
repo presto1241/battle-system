@@ -40,4 +40,21 @@ impl Battle
         self.player_health -= damage;
         println!("{}", format!("Goblin attacks you for {} damage.", damage))
     }
+
+    pub fn check_end(&self) -> bool
+    {
+        if self.player_health <= 0
+        {
+            println!("You died.\nGame over!");
+            return true;
+        }
+
+        if self.enemy_health <= 0
+        {
+            println!("All enemies are dead.\nYou win!");
+            return true;
+        }
+
+        return false;
+    }
 }

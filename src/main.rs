@@ -12,6 +12,9 @@ fn main() {
     battle.player_turn();
     battle.enemy_turn();
 
+    // Check end game condition
+    battle.check_end();
+
     // Wait for user to press enter to quit
     let mut input = String::new();
     io::stdin()
