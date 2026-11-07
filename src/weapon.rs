@@ -9,13 +9,13 @@ pub struct Weapon
 
 impl Weapon
 {
-    pub fn new(name:String, number_of_uses:i32, damage:i32) -> Self
+    pub fn new(name:String, damage:i32, number_of_uses:i32) -> Self
     {
         Self
         {
             name,
-            number_of_uses,
-            damage
+            damage,
+            number_of_uses
         }
     }
 
