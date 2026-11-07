@@ -1,5 +1,6 @@
 use std::io::{self};
 mod battle;
+
 use crate::battle::Battle;
 
 fn main() {
@@ -28,8 +29,32 @@ fn main() {
     }
 
     // Wait for user to press enter to quit
-    let mut input = String::new();
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read line");
+    println!("Enter a number between 1 and 4");
+    input_number(1, 4);
+}
+
+fn input_number(min:i32, max:i32) -> i32
+{
+    loop
+    {
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
+
+        match input.trim().parse::<i32>()
+        {
+            Ok(num) =>
+            {
+                if num >= min && num <= max
+                {
+                    return num;
+                }
+
+                println!("{}", format!("Input {} is out of bounds. Try another input", num));
+            }
+
+            Err(_) => println!("{}", format!("Input {} is not a number. Try another input", input))
+        }
+    }
 }
