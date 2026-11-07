@@ -1,6 +1,6 @@
-use std::io::{self};
 mod battle;
-
+mod enemy;
+use std::io::{self};
 use crate::battle::Battle;
 
 fn main() {

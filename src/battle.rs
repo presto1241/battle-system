@@ -1,10 +1,11 @@
 use crate::input_number;
+use crate::enemy::Enemy;
 
 #[derive(Default)]
 pub struct Battle
 {
     pub player_health :i32,
-    pub enemies :[i32; 5]
+    pub enemies :Vec<Enemy>
 }
 
 impl Battle
@@ -12,10 +13,15 @@ impl Battle
     pub fn setup_battle(&mut self)
     {
         self.player_health = 20;
-        for enemy in &mut self.enemies
-        {
-            *enemy = 4;
-        }
+
+        self.enemies = Vec::new();
+
+        // Create all the enemies in the battle
+        self.enemies.push(Enemy::new(String::from("Goblin Scout"), 4, 1, 3));
+        self.enemies.push(Enemy::new(String::from("Goblin Brute"), 10, 1, 2));
+        self.enemies.push(Enemy::new(String::from("Goblin Assasin"), 2, 10, 10));
+        self.enemies.push(Enemy::new(String::from("Goblin Warrior"), 6, 2, 4));
+        self.enemies.push(Enemy::new(String::from("Goblin Warrior"), 6, 2, 4));
 
         println!("A Goblin attacks you in the woods.");
     }
@@ -26,7 +32,7 @@ impl Battle
 
         for (i, x) in self.enemies.iter().enumerate()
         {
-            println!("{}", format!("    {}. Goblin has {} health", i + 1, x));
+            println!("{}", format!("    {}. {}", i + 1, x.display()));
         }
     }
 
@@ -43,26 +49,22 @@ impl Battle
         let target_idx = (goblin_index - 1) as usize;
 
         // Reduce enemy health and print log.
-        self.enemies[target_idx] -= damage;
-        println!("{}", format!("You attack the Goblin for {} damage.", damage))
+        self.enemies[target_idx].hurt(damage);
+        println!("{}", format!("You attack {} for {} damage.\n", self.enemies[target_idx].name, damage))
     }
 
     pub fn enemy_turn(&mut self)
     {
-        for (i, e) in self.enemies.iter().enumerate()
+        for e in self.enemies.iter()
         {
             // Skip if the current enemy is 0 or less health
-            if *e <= 0
+            if !e.alive()
             {
                 continue;
             }
 
-            // Attack with a damage range between 1-3
-            let damage: i32 = fastrand::i32(1..=3);
-
             // Reduce player health and print log.
-            self.player_health -= damage;
-            println!("{}", format!("{}. Goblin attacks you for {} damage.", i, damage))
+            self.player_health -= e.attack();
         }
     }
 
@@ -76,9 +78,9 @@ impl Battle
 
         // Fetch if there are any enemies alive still
         let mut any_alive :bool = false;
-        for e in self.enemies
+        for e in self.enemies.iter()
         {
-            if e >= 0
+            if e.alive()
             {
                 any_alive = true;
             }
