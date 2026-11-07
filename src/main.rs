@@ -6,14 +6,26 @@ fn main() {
     let mut battle : Battle = Battle::default();
     // Setup and display the battle
     battle.setup_battle();
-    battle.display_healths();
-
-    // Run Player and Enemy attacks.
-    battle.player_turn();
-    battle.enemy_turn();
 
     // Check end game condition
-    battle.check_end();
+    loop
+    {
+        // Print the healths of every player
+        battle.display_healths();
+
+        // Run Player and Enemy attacks.
+        battle.player_turn();
+        battle.enemy_turn();
+
+        // Whitespace to make reading battle easier
+        println!("");
+
+        // Check for end game condition
+        if battle.check_end()
+        {
+            break;
+        }
+    }
 
     // Wait for user to press enter to quit
     let mut input = String::new();
