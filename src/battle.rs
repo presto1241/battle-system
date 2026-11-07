@@ -1,11 +1,13 @@
 use crate::input_number;
 use crate::enemy::Enemy;
+use crate::weapon::Weapon;
 
 #[derive(Default)]
 pub struct Battle
 {
     pub player_health :i32,
-    pub enemies :Vec<Enemy>
+    pub enemies :Vec<Enemy>,
+    pub weapons :Vec<Weapon>
 }
 
 impl Battle
@@ -22,6 +24,12 @@ impl Battle
         self.enemies.push(Enemy::new(String::from("Goblin Assasin"), 2, 10, 10));
         self.enemies.push(Enemy::new(String::from("Goblin Warrior"), 6, 2, 4));
         self.enemies.push(Enemy::new(String::from("Goblin Warrior"), 6, 2, 4));
+
+        // Create all weapons in the battle
+        self.weapons = Vec::new();
+        self.weapons.push(Weapon::new(String::from("Dagger"), 2, 10));
+        self.weapons.push(Weapon::new(String::from("Hammer"), 10, 2));
+        self.weapons.push(Weapon::new(String::from("Sword"), 4, 5));
 
         println!("A Goblin attacks you in the woods.");
     }
@@ -40,17 +48,29 @@ impl Battle
     {
         // Fetch who the player wants to attack
         println!("It is your turn. Which enemy do you want to attacK?");
-        let goblin_index :i32 = input_number(1, self.enemies.len() as i32);
+        let enemy_index :i32 = input_number(1, self.enemies.len() as i32) - 1;
+        let target_enemy :&mut Enemy = &mut self.enemies[enemy_index as usize];
 
-        // Attack with a damage range between 2-4
-        let damage: i32 = fastrand::i32(2..=4);
+        // Print a list of all weapons the player has access to
+        println!("Your weapons are:");
+        for (i, w) in self.weapons.iter().enumerate()
+        {
+            println!("{}", format!("    {}. {}", i + 1, w.display()));
+        }
 
-        // Convert into index so everyone is happy
-        let target_idx = (goblin_index - 1) as usize;
+        // Let the player choose a weapon to attack the enemy with
+        println!("Which weapon do you want to use:");
+        let weapon_index :i32 = input_number(1, self.weapons.len() as i32) - 1;
+        let target_weapon :&mut Weapon = &mut self.weapons[weapon_index as usize];
 
         // Reduce enemy health and print log.
-        self.enemies[target_idx].hurt(damage);
-        println!("{}", format!("You attack {} for {} damage.\n", self.enemies[target_idx].name, damage))
+        target_weapon.attack(target_enemy);
+        println!("{}", format!("You attack {} with {} for {} damage.\n", target_enemy.name, target_weapon.name, target_weapon.damage));
+
+        if target_weapon.number_of_uses <= 0
+        {
+            self.weapons.remove(weapon_index as usize);
+        }
     }
 
     pub fn enemy_turn(&mut self)

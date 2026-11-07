@@ -1,5 +1,6 @@
 mod battle;
 mod enemy;
+mod weapon;
 use std::io::{self};
 use crate::battle::Battle;
 

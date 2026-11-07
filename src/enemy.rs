@@ -39,6 +39,6 @@ impl Enemy
 
     pub fn alive(&self) -> bool
     {
-        return self.health >= 0
+        return self.health > 0
     }
 }
