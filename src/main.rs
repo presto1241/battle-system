@@ -1,6 +1,8 @@
 mod battle;
 mod enemy;
 mod weapon;
+mod base_enemy;
+mod enemy_healer;
 use std::io::{self};
 use crate::battle::Battle;
 
@@ -14,9 +16,11 @@ fn main() {
     {
         // Print the healths of every player
         battle.display_healths();
+        println!("");
 
         // Run Player and Enemy attacks.
         battle.player_turn();
+        println!("");
         battle.enemy_turn();
 
         // Whitespace to make reading battle easier

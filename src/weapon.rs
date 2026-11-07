@@ -19,7 +19,7 @@ impl Weapon
         }
     }
 
-    pub fn attack(&mut self, enemy:&mut Enemy) -> bool
+    pub fn attack(&mut self, enemy:&mut dyn Enemy) -> bool
     {
         if self.number_of_uses <= 0
         {

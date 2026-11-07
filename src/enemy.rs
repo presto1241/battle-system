@@ -1,44 +1,30 @@
-pub struct Enemy
+#[derive(Debug, Clone)]
+pub struct EnemyData
 {
     pub name :String,
     pub health :i32,
-    pub min_damage :i32,
-    pub max_damage :i32
 }
 
-impl Enemy
+impl EnemyData
 {
-    pub fn new(name:String, health:i32, min_damage:i32, max_damage:i32) -> Self
+    pub fn new(name:String, health:i32) -> EnemyData
     {
-        Self
-        {
-            name,
-            health,
-            min_damage,
-            max_damage
-        }
+        EnemyData { name, health }
     }
+}
 
-    pub fn attack(&self) -> i32
-    {
-        let damage: i32 = fastrand::i32(self.min_damage..=self.max_damage);
-        println!("{}", format!("{} attacked you for {} damage", self.name, damage));
+pub enum Action
+{
+    Attack(i32),
+    Heal(i32)
+}
 
-        return damage;
-    }
-
-    pub fn hurt(&mut self, damage:i32)
-    {
-        self.health -= damage;
-    }
-
-    pub fn display(&self) -> String
-    {
-        return format!("{} has {} health.", self.name, self.health);
-    }
-
-    pub fn alive(&self) -> bool
-    {
-        return self.health > 0
-    }
+pub trait Enemy
+{
+    fn stats(&self) -> &EnemyData;
+    fn act(&self) -> Action;
+    fn hurt(&mut self, damage:i32);
+    fn heal(&mut self, health:i32);
+    fn alive(&self) -> bool;
+    fn display(&self) -> String;
 }
