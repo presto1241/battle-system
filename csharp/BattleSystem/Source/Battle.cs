@@ -7,9 +7,15 @@
 ********************************************************************/
 public class Battle
 {
-    // I hate magic variables in code so we define starting health values here.
+    // I hate magic variables in code so we define values here.
     private const int PLAYER_START_HEALTH = 5;
     private const int ENEMY_START_HEALTH = 4;
+
+    private const int PLAYER_DAMAGE_MIN = 2;
+    private const int PLAYER_DAMAGE_MAX = 5;
+
+    private const int ENEMY_DAMAGE_MIN = 1;
+    private const int ENEMY_DAMAGE_MAX = 4;
 
     public int PlayerHealth { get; private set; }
     public float EnemyHealth { get; private set; }
@@ -33,5 +39,35 @@ public class Battle
     {
         Console.WriteLine($"You have {PlayerHealth} health.");
         Console.WriteLine($"Goblin has {EnemyHealth} health.");    
+    }
+
+    /// <summary>
+    /// Runs a turn for the player to attack etc.
+    /// </summary>
+    public void PlayerTurn()
+    {
+        // Generate a random damage number
+        Random random = new Random();
+        int damage = random.Next(PLAYER_DAMAGE_MIN, PLAYER_DAMAGE_MAX);
+        
+        // Apply damage to the enemy
+        EnemyHealth -= damage;
+        
+        Console.WriteLine($"You attack Goblin for {damage} damage.");
+    }
+
+    /// <summary>
+    /// Runs a turn for the enemies to attack, heal etc.
+    /// </summary>
+    public void EnemyTurn()
+    {
+        // Generate a random damage number
+        Random random = new Random();
+        int damage = random.Next(ENEMY_DAMAGE_MIN, ENEMY_DAMAGE_MAX);
+        
+        // Apply damage to the player
+        PlayerHealth -= damage;
+        
+        Console.WriteLine($"Goblin attacks you for {damage} damage.");
     }
 }

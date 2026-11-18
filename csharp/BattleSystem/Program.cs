@@ -17,6 +17,10 @@ class Program
         battle.SetupBattle();
         battle.DisplayHealths();
 
+        // Run turns for each entity
+        battle.PlayerTurn();
+        battle.EnemyTurn();
+
         // Wait for user input
         Console.ReadLine();
     }
