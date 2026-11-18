@@ -25,7 +25,36 @@ class Program
             battle.EnemyTurn();
         }
         
-        // Wait for user input
+        // Wait for user input before exiting
         Console.ReadLine();
+    }
+
+    /// <summary>
+    /// Ask the user to input a number within a range.
+    /// </summary>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    /// <returns>The number the user gave.</returns>
+    public static int InputNumber(int min, int max)
+    {
+        while (true)
+        {
+            // I don't like null anymore
+            string input = Console.ReadLine() ?? string.Empty;
+            if (!int.TryParse(input, out int num))
+            {
+                Console.WriteLine($"Input {input} is not a number. Try another input");
+                continue;
+            }
+
+            // Print out of bounds if the user writes a number greater or less than max
+            if (num < min || num > max)
+            {
+                Console.WriteLine($"Input {num} is out of bounds. Try another input");
+                continue;
+            }
+
+            return num;
+        }
     }
 }

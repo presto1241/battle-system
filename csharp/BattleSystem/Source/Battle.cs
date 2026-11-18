@@ -8,7 +8,9 @@
 public class Battle
 {
     // I hate magic variables in code so we define values here.
-    private const int PLAYER_START_HEALTH = 5;
+    private const int ENEMY_COUNT = 5;
+
+    private const int PLAYER_START_HEALTH = 20;
     private const int ENEMY_START_HEALTH = 4;
 
     private const int PLAYER_DAMAGE_MIN = 2;
@@ -18,7 +20,7 @@ public class Battle
     private const int ENEMY_DAMAGE_MAX = 4;
 
     public int PlayerHealth { get; private set; }
-    public float EnemyHealth { get; private set; }
+    public float[] Enemies { get; private set; } = Array.Empty<float>();
 
     /// <summary>
     /// Sets up a new battle by instantiating enemies, players, and setting their health.
@@ -27,9 +29,10 @@ public class Battle
     public void SetupBattle()
     {
         PlayerHealth = PLAYER_START_HEALTH;
-        EnemyHealth = ENEMY_START_HEALTH;
+        Enemies = new float[ENEMY_COUNT];
+        Array.Fill(Enemies, ENEMY_START_HEALTH);
 
-        Console.WriteLine("A Goblin attacks you in the woods.");
+        Console.WriteLine("You encounter five Goblins in the woods.");
     }
 
     /// <summary>
@@ -38,7 +41,13 @@ public class Battle
     public void DisplayHealths()
     {
         Console.WriteLine($"You have {PlayerHealth} health.");
-        Console.WriteLine($"Goblin has {EnemyHealth} health.");    
+        
+        for (int i = 0; i < Enemies.Length; i++)
+        {
+            Console.WriteLine($"    {i + 1}. Goblin has {Enemies[i]} health.");    
+        }
+        
+        Console.WriteLine();
     }
 
     /// <summary>
@@ -46,12 +55,16 @@ public class Battle
     /// </summary>
     public void PlayerTurn()
     {
+        Console.WriteLine("It is your turn. Which enemy do you want to attack?");
+        int input = Program.InputNumber(1, Enemies.Length);
+        int inputIndex = input - 1;
+
         // Generate a random damage number
         Random random = new Random();
         int damage = random.Next(PLAYER_DAMAGE_MIN, PLAYER_DAMAGE_MAX);
         
         // Apply damage to the enemy
-        EnemyHealth -= damage;
+        Enemies[inputIndex] -= damage;
         
         Console.WriteLine($"You attack Goblin for {damage} damage.");
     }
@@ -61,14 +74,19 @@ public class Battle
     /// </summary>
     public void EnemyTurn()
     {
-        // Generate a random damage number
-        Random random = new Random();
-        int damage = random.Next(ENEMY_DAMAGE_MIN, ENEMY_DAMAGE_MAX);
-        
-        // Apply damage to the player
-        PlayerHealth -= damage;
-        
-        Console.WriteLine($"Goblin attacks you for {damage} damage.");
+        for (int i = 0; i < Enemies.Length; i++)
+        {
+            // Generate a random damage number
+            Random random = new Random();
+            int damage = random.Next(ENEMY_DAMAGE_MIN, ENEMY_DAMAGE_MAX);
+
+            // Apply damage to the player
+            PlayerHealth -= damage;
+
+            Console.WriteLine($"{i + 1}. Goblin attacks you for {damage} damage.");
+        }
+
+        Console.WriteLine();
     }
 
     /// <summary>
@@ -83,7 +101,12 @@ public class Battle
             return true;
         }
 
-        if (EnemyHealth <= 0)
+        bool anyAlive = false;
+
+        // Go through every enemy, and set "anyAlive" to true if that enemies health is greater than zero
+        foreach (var enemy in Enemies) if (enemy > 0) anyAlive = true;
+
+        if (!anyAlive)
         {
             Console.WriteLine("All enemies are dead.\nYou win!");
             return true;
