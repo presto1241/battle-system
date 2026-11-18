@@ -12,18 +12,19 @@ class Program
     {
         // Create a battle
         Battle battle = new();
-
-        // Setup the battle then print healths
         battle.SetupBattle();
-        battle.DisplayHealths();
 
-        // Run turns for each entity
-        battle.PlayerTurn();
-        battle.EnemyTurn();
-
-        // Lastly, check if the game should end
-        battle.CheckEndGame();
-
+        // Run game loop until someone dies
+        while (!battle.CheckEndGame())
+        {
+            // First display healths
+            battle.DisplayHealths();
+            
+            // Then run turns for each entity    
+            battle.PlayerTurn();
+            battle.EnemyTurn();
+        }
+        
         // Wait for user input
         Console.ReadLine();
     }
