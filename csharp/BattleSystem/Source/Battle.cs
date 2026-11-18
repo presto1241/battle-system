@@ -70,4 +70,25 @@ public class Battle
         
         Console.WriteLine($"Goblin attacks you for {damage} damage.");
     }
+
+    /// <summary>
+    /// Checks if the game should end, if any of the criteria is met, then this method will print console statements.
+    /// </summary>
+    /// <returns>Returns true if either player or enemy are dead.</returns>
+    public bool CheckEndGame()
+    {
+        if (PlayerHealth <= 0)
+        {
+            Console.WriteLine("You died.\nGame over!");
+            return true;
+        }
+
+        if (EnemyHealth <= 0)
+        {
+            Console.WriteLine("All enemies are dead.\nYou win!");
+            return true;
+        }
+
+        return false;
+    }
 }

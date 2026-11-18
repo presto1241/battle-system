@@ -21,6 +21,9 @@ class Program
         battle.PlayerTurn();
         battle.EnemyTurn();
 
+        // Lastly, check if the game should end
+        battle.CheckEndGame();
+
         // Wait for user input
         Console.ReadLine();
     }
