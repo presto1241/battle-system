@@ -8,19 +8,13 @@
 public class Battle
 {
     // I hate magic variables in code so we define values here.
-    private const int ENEMY_COUNT = 4;
-
+    private const int ENEMY_COUNT = 5;
     private const int PLAYER_START_HEALTH = 20;
-    private const int ENEMY_START_HEALTH = 4;
-
     private const int PLAYER_DAMAGE_MIN = 2;
     private const int PLAYER_DAMAGE_MAX = 5;
 
-    private const int ENEMY_DAMAGE_MIN = 1;
-    private const int ENEMY_DAMAGE_MAX = 4;
-
     public Player Player { get; private set; } = new(PLAYER_START_HEALTH);
-    public Enemy[] Enemies { get; private set; } = Array.Empty<Enemy>();
+    public List<Enemy> Enemies { get; private set; } = new(ENEMY_COUNT);
 
     /// <summary>
     /// Sets up a new battle by instantiating enemies, players, and setting their health.
@@ -28,23 +22,23 @@ public class Battle
     /// </summary>
     public void SetupBattle()
     {
-        Enemies = new Enemy[ENEMY_COUNT];
-        Enemies[0] = new Enemy("Goblin Scout", 4, 1, 4);
-        Enemies[1] = new Enemy("Goblin Brute", 10, 1, 3);
-        Enemies[2] = new Enemy("Goblin Assassin", 2, 10, 10);
-        Enemies[3] = new Enemy("Goblin Warrior", 6, 2, 5);
-
+        Enemies.Add(new Enemy("Goblin Scout", 4, 1, 4));
+        Enemies.Add(new Enemy("Goblin Brute", 10, 1, 3));
+        Enemies.Add(new Enemy("Goblin Assassin", 2, 10, 10));
+        Enemies.Add(new Enemy("Goblin Warrior", 6, 2, 5));
+        Enemies.Add(new Enemy("Goblin Warrior", 6, 2, 5));
+        
         Console.WriteLine("You encounter five Goblins in the woods.");
     }
 
     /// <summary>
-    /// Displays all the healths of every entity in the scene.
+    /// Displays all the healths of every entity in the scene. It does not print the health of anyone dead.
     /// </summary>
     public void DisplayHealths()
     {
         Player.DisplayHealth();
         
-        for (int i = 0; i < Enemies.Length; i++)
+        for (int i = 0; i < Enemies.Count; i++)
         {
             if (Enemies[i].IsDead()) continue;
 
@@ -61,18 +55,20 @@ public class Battle
     public void PlayerTurn()
     {
         Console.WriteLine("It is your turn. Which enemy do you want to attack?");
-        int input = Program.InputNumber(1, Enemies.Length);
-        int inputIndex = input - 1;
+        int enemyIndex = Program.InputNumber(1, Enemies.Count) - 1;
+        Enemy enemy = Enemies[enemyIndex];
 
-        // Generate a random damage number
-        Random random = new Random();
-        int damage = random.Next(PLAYER_DAMAGE_MIN, PLAYER_DAMAGE_MAX);
+        Weapon weapon = Player.SelectWeapon();
+        weapon.Attack(enemy);
         
-        // Apply damage to the enemy
-        Enemy enemy = Enemies[inputIndex];
-        enemy.Hurt(damage);
-        
-        Console.WriteLine($"You attack {enemy.Health} for {damage} damage.");
+        Console.WriteLine($"You attack {enemy.Name} for {weapon.Damage} damage.");
+
+        // Print enemy death if the enemy has died after the player attack
+        if (enemy.IsDead())
+        {
+            Console.WriteLine($"{enemy.Name} died");
+            Console.WriteLine();
+        }
     }
 
     /// <summary>
@@ -87,6 +83,7 @@ public class Battle
         }
 
         Console.WriteLine();
+        Console.ReadLine();
     }
 
     /// <summary>
