@@ -10,8 +10,6 @@ public class Battle
     // I hate magic variables in code so we define values here.
     private const int ENEMY_COUNT = 5;
     private const int PLAYER_START_HEALTH = 20;
-    private const int PLAYER_DAMAGE_MIN = 2;
-    private const int PLAYER_DAMAGE_MAX = 5;
 
     public Player Player { get; private set; } = new(PLAYER_START_HEALTH);
     public List<Enemy> Enemies { get; private set; } = new(ENEMY_COUNT);
@@ -26,15 +24,15 @@ public class Battle
         Enemies.Add(new Enemy("Goblin Brute", 10, 1, 3));
         Enemies.Add(new Enemy("Goblin Assassin", 2, 10, 10));
         Enemies.Add(new Enemy("Goblin Warrior", 6, 2, 5));
-        Enemies.Add(new Enemy("Goblin Warrior", 6, 2, 5));
-        
+        Enemies.Add(new EnemyHealer("Goblin Healer", 5, 1, 0, 0));
+
         Console.WriteLine("You encounter five Goblins in the woods.");
     }
 
     /// <summary>
     /// Displays all the healths of every entity in the scene. It does not print the health of anyone dead.
     /// </summary>
-    public void DisplayHealths()
+    public void DisplayAll()
     {
         Player.DisplayHealth();
         
@@ -43,7 +41,7 @@ public class Battle
             if (Enemies[i].IsDead()) continue;
 
             Console.Write($"    {i + 1}. ");
-            Enemies[i].DisplayHealth();
+            Enemies[i].Display();
         }
         
         Console.WriteLine();
@@ -58,17 +56,7 @@ public class Battle
         int enemyIndex = Program.InputNumber(1, Enemies.Count) - 1;
         Enemy enemy = Enemies[enemyIndex];
 
-        Weapon weapon = Player.SelectWeapon();
-        weapon.Attack(enemy);
-        
-        Console.WriteLine($"You attack {enemy.Name} for {weapon.Damage} damage.");
-
-        // Print enemy death if the enemy has died after the player attack
-        if (enemy.IsDead())
-        {
-            Console.WriteLine($"{enemy.Name} died");
-            Console.WriteLine();
-        }
+        Player.Attack(enemy);
     }
 
     /// <summary>
@@ -79,7 +67,7 @@ public class Battle
         foreach (var enemy in Enemies)
         {
             if (enemy.IsDead()) continue;
-            enemy.Attack(Player);
+            enemy.Act(this);
         }
 
         Console.WriteLine();

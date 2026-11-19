@@ -17,8 +17,8 @@ class Program
         // Run game loop until someone dies
         while (!battle.CheckEndGame())
         {
-            // First display healths
-            battle.DisplayHealths();
+            // First display all characters statuses
+            battle.DisplayAll();
             
             // Then run turns for each entity    
             battle.PlayerTurn();

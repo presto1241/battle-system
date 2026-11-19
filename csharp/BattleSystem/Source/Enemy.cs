@@ -27,10 +27,20 @@ public class Enemy {
     }
 
     /// <summary>
+    /// A method that makes the enemy run an action. This can be overriden to create more actions.
+    /// By default, act will call attack.
+    /// </summary>
+    /// <param name="battle"></param>
+    public virtual void Act(Battle battle)
+    {
+        Attack(battle.Player);
+    }
+
+    /// <summary>
     /// Make the enemy attack a player.
     /// </summary>
     /// <param name="player"></param>
-    public void Attack(Player player)
+    private void Attack(Player player)
     {
         Random random = new Random();
 
@@ -50,15 +60,25 @@ public class Enemy {
     }
 
     /// <summary>
+    /// Heal the enemy with health.
+    /// </summary>
+    /// <param name="health"></param>
+    public void Heal(int health)
+    {
+        if (IsDead()) return;
+        Health += health;
+    }
+
+    /// <summary>
     /// Returns true if the enemy  is dead or their health is at 0.
     /// </summary>
     /// <returns></returns>
     public bool IsDead() => Health <= 0;
 
     /// <summary>
-    /// Display the current health of the enemy.
+    /// Display the current status of the enemy.
     /// </summary>
-    public void DisplayHealth()
+    public virtual void Display()
     {
         Console.WriteLine($"{Name} has {Health} health.");
     }

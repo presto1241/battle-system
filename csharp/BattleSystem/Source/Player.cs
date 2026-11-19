@@ -19,13 +19,17 @@ public class Player
         Health = health;
         Weapons = new()
         {
-            new Weapon(this, "Dagger", 2, 10),
-            new Weapon(this, "Hammer", 10, 2),
-            new Weapon(this, "Sword", 4, 5),
+            new Weapon("Dagger", 2, 10),
+            new Weapon("Hammer", 10, 2),
+            new Weapon("Sword", 4, 5),
         };
     }
 
-    public Weapon SelectWeapon()
+    /// <summary>
+    /// Prompts the user to select a weapon to attack with.
+    /// </summary>
+    /// <returns>Returns the weapon the user selected</returns>
+    private Weapon SelectWeapon()
     {
         Console.WriteLine("Your weapons are:");
         for (int i = 0; i < Weapons.Count; i++)
@@ -38,6 +42,29 @@ public class Player
         int weaponIndex = Program.InputNumber(1, Weapons.Count) - 1;
 
         return Weapons[weaponIndex];
+    }
+
+    /// <summary>
+    /// Attacks the enemy with a specific weapon the user selects.
+    /// </summary>
+    /// <param name="enemy"></param>
+    public void Attack(Enemy enemy)
+    {
+        // Prompt the user to select a weapon
+        Weapon weapon = SelectWeapon();
+        weapon.Attack(enemy);
+
+        // Remove the weapon if it can no longer be used.
+        if (!weapon.CanUse()) Weapons.Remove(weapon);
+        
+        Console.WriteLine($"You attack {enemy.Name} for {weapon.Damage} damage.");
+
+        // Print enemy death if the enemy has died after the player attack
+        if (enemy.IsDead())
+        {
+            Console.WriteLine($"{enemy.Name} died");
+            Console.WriteLine();
+        }
     }
 
     /// <summary>

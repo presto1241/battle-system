@@ -10,11 +10,9 @@ public class Weapon
     public readonly string Name;
     public readonly int Damage;
     public int NumberOfUses { get; private set; }
-    private readonly Player _owner;
 
-    public Weapon(Player owner, string name, int damage, int numberOfUses)
+    public Weapon(string name, int damage, int numberOfUses)
     {
-        _owner = owner;
         Name = name;
         Damage = damage;
         NumberOfUses = numberOfUses;
@@ -31,9 +29,6 @@ public class Weapon
 
         enemy.Hurt(Damage);
         NumberOfUses -= 1;
-
-        // Don't really like this architecture
-        if (!CanUse()) _owner.Weapons.Remove(this);
     }
 
     public bool CanUse() => NumberOfUses > 0;
